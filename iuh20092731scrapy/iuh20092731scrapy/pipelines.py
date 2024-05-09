@@ -7,6 +7,7 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 import csv
+import json
 
 class Iuh20092731ScrapyPipeline:
     def process_item(self, item, spider):
@@ -24,4 +25,12 @@ class CSVDBBooksPipeline:
 
     def process_item(self, item, spider):
         self.writer.writerow(item.values())
+        return item
+    
+class JsonDBBooksPipeline:
+    def process_item(self, item, spider):
+        self.file = open('jsondatabooks.json','a',encoding='utf-8')
+        line = json.dumps(dict(item), ensure_ascii=False) + '\n'
+        self.file.write(line)
+        self.file.close()
         return item
