@@ -17,6 +17,8 @@ from scrapy.exceptions import DropItem
 
 import mysql.connector
 
+import psycopg2
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -88,6 +90,50 @@ class MySQLBooksPipline:
         # Inset data to MySQL
         self.cur.execute('''
             INSERT INTO books (`title`, `decriptions`, `productUrl`, `price`, `stock`, `rating`)
+            VALUES(%s, %s, %s, %s, %s, %s)
+        ''', (
+            item.get('title'),
+            item.get('decriptions'),
+            item.get('productUrl'),
+            item.get('price'),
+            item.get('stock'),
+            item.get('rating')
+        ))
+        self.conn.commit()
+
+        return item
+    
+    def close_spider(self, spider):
+        self.cur.close()
+        self.conn.close()
+
+class PostgresBooksPipeline:
+    def __init__(self):
+        self.conn = psycopg2.connect(
+            host=os.environ.get('POSTGRES_HOST'), 
+            user=os.environ.get('POSTGRES_USER'), 
+            password=os.environ.get('POSTGRES_PASSWORD'), 
+            database=os.environ.get('POSTGRES_DB'),
+        )
+
+        self.cur = self.conn.cursor()
+
+        self.cur.execute('''
+            CREATE TABLE IF NOT EXISTS books(
+                id SERIAL PRIMARY KEY,
+                title VARCHAR(255),
+                decriptions text,
+                productUrl VARCHAR(255),
+                price FLOAT,
+                stock INT,
+                rating INT
+            )
+        ''')
+
+    def process_item(self, item, spider):
+        self.cur.execute(
+            '''
+            INSERT INTO books (title, decriptions, productUrl, price, stock, rating)
             VALUES(%s, %s, %s, %s, %s, %s)
         ''', (
             item.get('title'),
