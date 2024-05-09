@@ -71,6 +71,7 @@ AUTOTHROTTLE_ENABLED = True
 AUTOTHROTTLE_START_DELAY = 0
 
 ITEM_PIPELINES = {
+    "iuh20092731scrapy.pipelines.MongoDBUnitopPipeline": 300,
     "iuh20092731scrapy.pipelines.JsonDBBooksPipeline": 200,
     "iuh20092731scrapy.pipelines.CSVDBBooksPipeline": 100,
     

@@ -7,7 +7,17 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 import csv
+
 import json
+
+import pymongo
+import os
+from dotenv import load_dotenv
+from scrapy.exceptions import DropItem
+
+
+# Load environment variables from .env file
+load_dotenv()
 
 class Iuh20092731ScrapyPipeline:
     def process_item(self, item, spider):
@@ -34,3 +44,17 @@ class JsonDBBooksPipeline:
         self.file.write(line)
         self.file.close()
         return item
+    
+class MongoDBUnitopPipeline:
+    def __init__(self):
+        print('os.environ.get(\'MONGO_URI\')', os.environ.get('MONGO_URI'))
+        self.client = pymongo.MongoClient(os.environ.get('MONGO_URI'))
+        self.db = self.client[os.environ.get('MONGO_DB')]
+    
+    def process_item(self, item, spider):
+        collection =self.db[os.environ.get('MONGO_COLLECTION')]
+        try:
+            collection.insert_one(dict(item))
+            return item
+        except Exception as e:
+            raise DropItem(f"Error inserting item: {e}")
