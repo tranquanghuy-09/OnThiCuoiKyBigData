@@ -1,0 +1,19 @@
+Hãy viết chương trình map-reduce để xử lý các yêu cầu sau
+
+1. Tìm giá sách thấp nhất
+
+2. Tìm giá sách thấp nhất và cao nhất đồng thời
+
+3. Tìm giá sách cao nhất trên từng xếp hạng (rating)
+
+4. Giá sách thấp nhất trên từng xếp hạng (rating)
+
+Yêu cầu 6: Tìm tổng giá trị tồn kho của tất cả các sách
+
+Yêu cầu 7: Tìm sách có giá cao nhất và sách có giá thấp nhất
+
+Yêu cầu 8: Đếm số lượng sách có mức đánh giá khác nhau
+
+9. Tìm các cuốn sách có giá cao hơn giá trung bình
+
+10. Tìm các cuốn sách có stock lơn hơn 10
